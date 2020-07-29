@@ -5,4 +5,5 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface FilePickerPlugin : NSObject<FlutterPlugin, FlutterStreamHandler, UIDocumentPickerDelegate, UITabBarDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+- (UIViewController *)viewControllerWithWindow:(UIWindow *)window;
 @end

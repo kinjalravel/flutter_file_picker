@@ -16,6 +16,25 @@
 @end
 
 @implementation FilePickerPlugin
+
+- (UIViewController *)viewControllerWithWindow:(UIWindow *)window {
+  UIWindow *windowToUse = window;
+  if (windowToUse == nil) {
+    for (UIWindow *window in [UIApplication sharedApplication].windows) {
+      if (window.isKeyWindow) {
+        windowToUse = window;
+        break;
+      }
+    }
+  }
+
+  UIViewController *topController = windowToUse.rootViewController;
+  while (topController.presentedViewController) {
+    topController = topController.presentedViewController;
+  }
+  return topController;
+}
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
     
     FlutterMethodChannel* channel = [FlutterMethodChannel
@@ -120,7 +139,7 @@
     self.documentPickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
     self.galleryPickerController.allowsEditing = NO;
     
-    [_viewController presentViewController:self.documentPickerController animated:YES completion:nil];
+    [[self viewControllerWithWindow:nil]  presentViewController:self.documentPickerController animated:YES completion:nil];
 }
 
 - (void) resolvePickMedia:(MediaType)type withMultiPick:(BOOL)multiPick withCompressionAllowed:(BOOL)allowCompression  {
@@ -158,7 +177,7 @@
             break;
     }
     
-    [self.viewController presentViewController:self.galleryPickerController animated:YES completion:nil];
+    [[self viewControllerWithWindow:nil] presentViewController:self.galleryPickerController animated:YES completion:nil];
 }
 
 - (void) resolveMultiPickFromGallery:(MediaType)type withCompressionAllowed:(BOOL)allowCompression {
@@ -233,7 +252,7 @@
         self->_result = nil;
     }];
     
-    [_viewController presentViewController:dkImagePickerController animated:YES completion:nil];
+    [[self viewControllerWithWindow:nil]  presentViewController:dkImagePickerController animated:YES completion:nil];
 }
 
 - (void) resolvePickAudio {
@@ -244,7 +263,7 @@
     self.audioPickerController.allowsPickingMultipleItems = NO;
     self.audioPickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
     
-    [self.viewController presentViewController:self.audioPickerController animated:YES completion:nil];
+    [[self viewControllerWithWindow:nil] presentViewController:self.audioPickerController animated:YES completion:nil];
 }
 
 #pragma mark - Delegates
